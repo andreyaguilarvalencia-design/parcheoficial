@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b17">
+  <meta name="description" content="Panel privado de gestión de eventos de Parche Oficial BCN.">
+  <title>Organizador | Parche Oficial BCN</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="organizador.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="organizador.js" defer></script>
+</head>
+
+<body>
+  <header class="admin-header">
+    <a class="brand" href="index.html" aria-label="Volver a la web pública">
+      <span class="brand-mark">
+        <img src="img/logo.jpg" alt="">
+      </span>
+
+      <span class="brand-text">
+        PARCHE <strong>OFICIAL BCN</strong>
+        <small>ÁREA DE ORGANIZACIÓN</small>
+      </span>
+    </a>
+
+    <div class="header-actions">
+      <span class="private-label"><i></i> PANEL DE GESTIÓN</span>
+      <a class="button button-quiet" href="index.html">Ver web pública ↗</a>
+    </div>
+  </header>
+
+  <main class="login-shell" id="login-shell">
+    <section class="login-card">
+      <p class="eyebrow">PARCHE OFICIAL BCN / ACCESO PRIVADO</p>
+      <h1>ENTRA AL<br><span>BACKSTAGE.</span></h1>
+      <p class="login-copy">Accede con el correo y la contraseña autorizados para gestionar la cartelera.</p>
+
+      <form id="login-form" class="login-form">
+        <label class="field">
+          Correo electrónico
+          <input id="login-email" type="email" autocomplete="username" required placeholder="organizacion@…">
+        </label>
+
+        <label class="field">
+          Contraseña
+          <input id="login-password" type="password" autocomplete="current-password" required placeholder="Tu contraseña">
+        </label>
+
+        <button class="button button-primary" type="submit">
+          INICIAR SESIÓN <span>↗</span>
+        </button>
+
+        <p id="login-message" class="form-message" aria-live="polite"></p>
+      </form>
+
+      <p class="login-footnote">La cuenta se crea desde el panel de administración de Supabase. No hay registro público.</p>
+    </section>
+  </main>
+
+  <main class="admin-layout" id="admin-app" hidden>
+    <aside class="sidebar">
+      <p class="side-label">GESTIÓN</p>
+
+      <a class="side-link active" href="#resumen">▦ <span>Resumen</span></a>
+      <a class="side-link" href="#crear-evento">＋ <span>Crear evento</span></a>
+      <a class="side-link" href="#mis-eventos">▤ <span>Mis eventos</span></a>
+
+      <div class="sidebar-note">
+        <span class="note-mark">P!</span>
+        <p><strong>Tu escena. Tus eventos.</strong><br>Organiza la información antes de publicarla.</p>
+      </div>
+    </aside>
+
+    <section class="workspace">
+      <div class="page-top" id="resumen">
+        <div>
+          <p class="eyebrow"><span class="live-dot"></span> PARCHE OFICIAL BCN / ORGANIZADOR</p>
+          <h1>EL BACKSTAGE<br><span>EMPIEZA AQUÍ.</span></h1>
+          <p class="intro">Gestiona los eventos que mueven la ciudad desde un solo lugar.</p>
+        </div>
+
+        <a class="button button-primary" href="#crear-evento">＋ CREAR EVENTO</a>
+      </div>
+
+      <div class="notice" role="note">
+        <span class="notice-icon">i</span>
+        <p><strong>Cartelera compartida.</strong> Los cambios se guardan en la base de datos y se reflejan en la web pública. Publica solo eventos cuya información y enlaces hayas comprobado.</p>
+      </div>
+
+      <div class="stats">
+        <article class="stat-card">
+          <span>EVENTOS GUARDADOS</span>
+          <strong id="stat-total">0</strong>
+          <small>En la base de datos</small>
+        </article>
+
+        <article class="stat-card">
+          <span>PUBLICADOS</span>
+          <strong id="stat-published">0</strong>
+          <small>Visibles en la web pública</small>
+        </article>
+
+        <article class="stat-card">
+          <span>BORRADORES</span>
+          <strong id="stat-drafts">0</strong>
+          <small>No visibles para visitantes</small>
+        </article>
+      </div>
+
+      <section class="panel create-panel" id="crear-evento">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow"><span class="section-index">01 /</span> NUEVO PLAN</p>
+            <h2>CREAR <span>EVENTO.</span></h2>
+          </div>
+          <span class="step-pill">FORMULARIO DE EVENTO</span>
+        </div>
+
+        <form id="event-form">
+          <div class="form-grid">
+            <label class="field field-wide">
+              Nombre del evento <span>*</span>
+              <input id="event-title" name="title" type="text" placeholder="Ej. Parche Oficial: Halloween" required maxlength="100">
+            </label>
+
+            <label class="field">
+              Fecha <span>*</span>
+              <input id="event-date" name="date" type="date" required>
+            </label>
+
+            <label class="field">
+              Hora
+              <input id="event-time" name="time" type="time">
+            </label>
+
+            <label class="field">
+              Ciudad <span>*</span>
+              <input id="event-city" name="city" type="text" placeholder="Barcelona" required maxlength="80">
+            </label>
+
+            <label class="field">
+              Sala / ubicación
+              <input id="event-venue" name="venue" type="text" placeholder="Nombre de la sala" maxlength="120">
+            </label>
+
+            <label class="field field-wide">
+              Descripción
+              <textarea id="event-description" name="description" rows="3" placeholder="Cuenta brevemente qué se va a vivir en el evento…" maxlength="500"></textarea>
+            </label>
+
+            <label class="field field-wide">
+              Enlace de entradas
+              <input id="event-ticket-url" name="ticketUrl" type="url" placeholder="https://…">
+              <small>Introduce el enlace completo de la plataforma de entradas.</small>
+            </label>
+
+            <label class="field field-wide">
+              Cartel del evento
+              <input id="event-poster" name="poster" type="file" accept="image/*">
+              <small>Para esta demo, utiliza carteles JPG/PNG de menos de 500 KB.</small>
+            </label>
+          </div>
+
+          <div class="form-bottom">
+            <label class="publish-toggle">
+              <input id="event-published" type="checkbox">
+              <span class="toggle-ui"></span>
+              <span>
+                <strong>Marcar como publicado</strong>
+                <small>Si lo activas, aparecerá en la sección Entradas de la web pública.</small>
+              </span>
+            </label>
+
+            <div class="form-actions">
+              <button class="button button-quiet" type="reset" id="reset-form">Limpiar</button>
+              <button class="button button-primary" type="submit">GUARDAR EVENTO <span>↗</span></button>
+            </div>
+          </div>
+
+          <p id="form-message" class="form-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="panel events-panel" id="mis-eventos">
+        <div class="panel-heading event-list-heading">
+          <div>
+            <p class="eyebrow"><span class="section-index">02 /</span> TU CARTELERA</p>
+            <h2>MIS <span>EVENTOS.</span></h2>
+          </div>
+
+          <label class="search-box">
+            <span>⌕</span>
+            <input id="event-search" type="search" placeholder="Buscar evento…">
+          </label>
+        </div>
+
+        <div id="events-list" class="events-list"></div>
+
+        <div id="empty-state" class="empty-state">
+          <span class="empty-icon">＋</span>
+          <h3>TODAVÍA NO HAY EVENTOS</h3>
+          <p>Crea tu primer evento y aparecerá aquí para que puedas revisarlo.</p>
+          <a class="button button-primary" href="#crear-evento">CREAR PRIMER EVENTO</a>
+        </div>
+      </section>
+
+      <footer class="admin-footer">
+        <span>© <span id="current-year"></span> PARCHE OFICIAL BCN</span>
+        <span>ORGANIZA. REVISA. MUEVE LA ESCENA.</span>
+      </footer>
+    </section>
+  </main>
+
+  <dialog id="delete-dialog" class="confirm-dialog">
+    <form method="dialog">
+      <p class="eyebrow">CONFIRMAR ACCIÓN</p>
+      <h2>¿ELIMINAR EVENTO?</h2>
+      <p>Esta acción eliminará el evento de la base de datos y de la web pública si estaba publicado.</p>
+
+      <div class="dialog-actions">
+        <button class="button button-quiet" value="cancel">Cancelar</button>
+        <button class="button button-danger" id="confirm-delete" value="confirm">Eliminar</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>
